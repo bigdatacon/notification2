@@ -26,21 +26,22 @@ for i in answer_many.json().get("user_info"):
 """читаю данные из кафки и отправляю сообщения на почту """
 consumer = KafkaConsumerMy_prot('example_topic', 'localhost', '9092')
 while True:
-    consume_from_kafka =consumer.read()
-    print(f' eto consume_from_kafka : {consume_from_kafka}')
-    # print(f'consume_from_kafka " {consume_from_kafka}, {consume_from_kafka.decode("utf-8") }')
-    id = list(consume_from_kafka.decode("utf-8").split(","))[0]
-    first_name = list(consume_from_kafka.decode("utf-8").split(","))[1]
-    last_name = list(consume_from_kafka.decode("utf-8").split(","))[2]
-    print(f'"consume_from_kafka:", {id, first_name, last_name}')
-    recepient = 'link17892020@gmail.com'
-    msg = f'your grateful recomendation {id} + {first_name, last_name}'
-    smtpStr = 'smtp.mail.ru'
-    smtpPort = 587
-    smtp_serv = GetPullConnection(smtpStr, smtpPort).smtp_serv_custom()
-    sendmail(recepient,  msg, smtp_serv)
-    print('ALL SEND TO EMAIL')
-    time.sleep(50)
+    consume_from_kafka_gen =consumer.read()
+    for consume_from_kafka in consume_from_kafka_gen:
+        print(f' eto consume_from_kafka : {consume_from_kafka}')
+        # print(f'consume_from_kafka " {consume_from_kafka}, {consume_from_kafka.decode("utf-8") }')
+        id = list(consume_from_kafka.decode("utf-8").split(","))[0]
+        first_name = list(consume_from_kafka.decode("utf-8").split(","))[1]
+        last_name = list(consume_from_kafka.decode("utf-8").split(","))[2]
+        print(f'"consume_from_kafka:", {id, first_name, last_name}')
+        recepient = 'link17892020@gmail.com'
+        msg = f'your grateful recomendation {id} + {first_name, last_name}'
+        smtpStr = 'smtp.mail.ru'
+        smtpPort = 587
+        smtp_serv = GetPullConnection(smtpStr, smtpPort).smtp_serv_custom()
+        sendmail(recepient,  msg, smtp_serv)
+        print('ALL SEND TO EMAIL')
+        time.sleep(50)
 
 
 # """отправляю письма именные, все на свой ящик пока """

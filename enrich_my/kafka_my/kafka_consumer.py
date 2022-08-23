@@ -15,7 +15,8 @@ class KafkaConsumerMy_prot:
         self.messages = []
     def read(self):
         for message in self.consumer:
-            return message.value
+            yield message.value
+
 
 
 # consumer = KafkaConsumer(
@@ -31,4 +32,7 @@ class KafkaConsumerMy_prot:
 if __name__ == '__main__':
     consumer = KafkaConsumerMy_prot('example_topic', 'localhost', '9092')
     while True:
-        print(consumer.read())
+        res = consumer.read()
+        for i in res:
+            print(f' eto i : {i}')
+        # print(consumer.read_once())
