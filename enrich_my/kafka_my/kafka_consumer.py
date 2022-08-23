@@ -29,6 +29,6 @@ class KafkaConsumerMy_prot:
 #     print(message.value)
 
 if __name__ == '__main__':
-    consumer = KafkaConsumerMy('example_topic', 'localhost', '9092')
+    consumer = KafkaConsumerMy_prot('example_topic', 'localhost', '9092')
     while True:
         print(consumer.read())
