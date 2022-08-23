@@ -1,0 +1,68 @@
+@startuml
+!include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+!include <C4/C4_Container.puml>
+Person(user, "User")
+Person(admin, "Content manager")
+System(front, "Web Application", "Frontend")
+
+System_Boundary(movie, "Movie Service") {
+    Container(movie_api, "Movie API", "Python, FastAPI")
+    ContainerDb(movie_db, "DB", "ElasticSearch")
+}
+System_Ext(oauth, "OAuth Provider")
+System_Boundary(auth, "Auth Service") {
+    Container(auth_api, "Auth API", "Python, Flask")
+    ContainerDb(auth_db, "Auth DB", "PostgreSQL")
+}
+System_Boundary(content, "Content administration") {
+    Container(content_panel, "Content admin panel", "Python, Django")
+    ContainerDb(content_db, "DB", "PostgreSQL")
+}
+System_Boundary(ugc, "UGC Service") {
+    ContainerDb(kafka, "kafka", "Kafka")
+    ContainerDb(clickhouse, "Storage", "ClickHouse")
+}
+System_Boundary(notification, "Notification Service") {
+    Person(manager, "Manager")
+    ContainerDb(notify_db, "Notifications", "PostgreSQL")
+    System(adminpanel, "Admin Panel", "Frontend, Django")
+    System_Boundary(notification_api, "Notification API") {
+        Container(api, "Notification API", "Python", "FastAPI")
+        ContainerDb(notify_api_db, "Notify History", "kafka")
+    }
+    System_Boundary(notification_worker, "Notification Worker") {
+        Container(notify_worker, "Worker", "Python")
+        ContainerDb(worker_history, "Worker history", "PostgreSQL")
+    }
+    System_Boundary(event_generator, "Event Generator") {
+        Container(sheduler, "sheduler", "Python")
+        Container(cron, "cron", "cron")
+    }
+    ContainerDb(broker, "Message Broker", "RabbitMQ")
+}
+Rel(user, front, "Uses", "HTTPS")
+Rel(adminpanel, api, "Uses")
+Rel(adminpanel, sheduler, "Uses")
+Rel(adminpanel, notify_db, "View")
+Rel(sheduler, notify_worker,)
+Rel_R(notify_worker, worker_history, "Edit")
+Rel(api, notify_api_db, "Uses")
+Rel(api, notify_db, "Uses")
+Rel(notify_worker, api, "Uses")
+
+Rel(api, broker, )
+
+Rel_R(cron, sheduler, "Uses")
+Rel(manager, adminpanel, "Uses")
+Rel(admin, content_panel, "Uses", "HTTPS")
+Rel(front, movie_api, "Uses")
+Rel_R(front, auth_api, "Uses")
+Rel_R(auth_api, auth_db, "Uses")
+Rel_R(auth_api, oauth, "Uses")
+Rel_R(movie_api, movie_db, "Uses")
+Rel_R(movie_api, kafka, "Send")
+Rel_R(kafka, clickhouse, "ETL")
+Rel_L(content_panel, content_db, "Uses")
+Rel(content_db, movie_db, "ETL")
+Rel(movie_api,auth_api, "get_Role", "HTTPS")
+@enduml

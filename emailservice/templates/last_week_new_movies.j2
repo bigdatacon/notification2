@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <h1>Здравствуйте, {{username}}!</h1>
+    <p>
+        Вот и вечер пятницы! За последний месяц вышли новые фильмы:
+    </p>
+    {% for movie in movies %}
+        <p>{{ movie.title }}</p>
+    {% endfor %}
+</body>
+</html>

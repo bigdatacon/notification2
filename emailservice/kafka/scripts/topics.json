@@ -1,0 +1,10 @@
+[
+  {
+    "name": "registration",
+    "description": "A topic for collecting user registration data"
+  },
+  {
+    "name": "notifications",
+    "description": "A topic for collecting notification events"
+  }
+]

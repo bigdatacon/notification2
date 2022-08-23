@@ -1,0 +1,100 @@
+services:
+  postgres:
+    image: postgres:13-alpine
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./.env
+    volumes:
+      - postgres_db_data:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d:ro
+    restart: unless-stopped
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    ports:
+      - 22181:2181
+    env_file:
+      - ./.env
+    restart: unless-stopped
+
+  kafka:
+    image: confluentinc/cp-kafka:7.0.1
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+    env_file:
+      - ./.env
+    restart: unless-stopped
+
+  topics_init_python:
+    container_name: topics_init_python
+    depends_on:
+      - kafka
+    build:
+      context: ./kafka
+    volumes:
+      - ./kafka:/app/
+    restart: on-failure
+
+  worker:
+    build: ./worker
+    image: worker
+    container_name: worker
+    user: web
+    env_file:
+      - ./worker/.env
+    restart: unless-stopped
+
+  notification_service:
+    build: ./notification_service
+    image: notification_image
+    container_name: notification_service
+    user: web
+    env_file:
+      - ./notification_service/.env
+    restart: unless-stopped
+
+  cron_service:
+    build: ./cron_service
+    image: cron_image
+    container_name: cron_service
+    user: web
+    env_file:
+      - ./cron_service/.env
+    restart: unless-stopped
+
+  enrichment_service:
+    build: ./enrichment_service
+    image: enrichment_image
+    container_name: enrichment_container
+    user: web
+    env_file:
+      - ./enrichment_service/.env
+    ports:
+      - "80:8080"
+    restart: unless-stopped
+  
+  zookeeper_clickhouse:
+    image: zookeeper:3.5
+    container_name: zookeeper_clickhouse
+    hostname: zookeeper_clickhouse
+
+  clickhouse:
+    image: yandex/clickhouse-server:20.4
+    container_name: clickhouse
+    hostname: clickhouse
+    restart: always
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - ./db/click:/docker-entrypoint-initdb.d
+      - clickhouse_db_data:/var/lib/clickhouse
+    depends_on:
+      - zookeeper_clickhouse
+
+volumes:
+  postgres_db_data:
+  clickhouse_db_data:
