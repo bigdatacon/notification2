@@ -336,7 +336,7 @@ CREATE TABLE public.user (
 
 ALTER TABLE public.user OWNER TO "postgres";
 
-INSERT INTO public.user VALUES ('a61846cf-8882-4213-a471-f763000d1147', '2022-01-23 14:05:32.084682', '2022-01-23 14:05:32.084682', 'Pup', 'password_hash', 'first_name', 'last_name', 'email', 'true', 'totp_secret', 'true');
+INSERT INTO public.user VALUES ('a61846cf-8882-4213-a471-f763000d1147', '2022-01-23 14:05:32.084682', '2022-01-23 14:05:32.084682', 'Pupdd', 'password_hash', 'first_name', 'last_name', 'email', 'true', 'totp_secret', 'true');
 
 
 
