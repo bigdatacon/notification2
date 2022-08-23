@@ -1,6 +1,6 @@
 import requests
 import time
-from kafka_my.kafka_consumer import KafkaConsumerMy
+from kafka_my.kafka_consumer import KafkaConsumerMy_prot
 from sending.sending_app import GetPullConnection, sendmail
 from kafka_my.kafka_producer_ext_class import KafkaProducersender
 
@@ -24,9 +24,10 @@ for i in answer_many.json().get("user_info"):
     print(f'ALL SEND TO Kafka : {i}')
 
 """читаю данные из кафки и отправляю сообщения на почту """
-consumer = KafkaConsumerMy('example_topic', 'localhost', '9092')
+consumer = KafkaConsumerMy_prot('example_topic', 'localhost', '9092')
 while True:
     consume_from_kafka =consumer.read()
+    print(f' eto consume_from_kafka : {consume_from_kafka}')
     # print(f'consume_from_kafka " {consume_from_kafka}, {consume_from_kafka.decode("utf-8") }')
     id = list(consume_from_kafka.decode("utf-8").split(","))[0]
     first_name = list(consume_from_kafka.decode("utf-8").split(","))[1]

@@ -1,7 +1,7 @@
 from kafka import KafkaConsumer
 
 
-class KafkaConsumerMy:
+class KafkaConsumerMy_prot:
     def __init__(self,topic, host, port):
         self.topic = topic
         self.host = host
@@ -12,9 +12,11 @@ class KafkaConsumerMy:
             auto_offset_reset='earliest',
             group_id='echo-messages-to-stdout',
         )
+        self.messages = []
     def read(self):
         for message in self.consumer:
             return message.value
+
 
 # consumer = KafkaConsumer(
 #     'example_topic',

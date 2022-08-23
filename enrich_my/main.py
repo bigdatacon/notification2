@@ -37,6 +37,12 @@ async def test_async():
     return AuthServicetesting.get_by_id()
 
 
+# @app.get('/get_all_users_info_from_table_async')
+# async def return_user_info_by_id_async(db_name, user_id):
+#     connection = PGConnection(db_name).main()
+#     user_info = AuthService(connection).get_by_id(user_id)
+#     return {'user_info' : user_info}
+
 
 # answer = requests.get("http://127.0.0.1:8000/user/", params={'db_name' : 'auth', 'user_id' : 'a61846cf-8882-4213-a471-f763000d1147'})
 # print(f' eto answer : {answer}')

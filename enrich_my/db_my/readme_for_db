@@ -12,3 +12,6 @@ psql -U postgres
 
 run fa:
 uvicorn main:app --reload
+
+kafka
+ git clone https://github.com/confluentinc/cp-all-in-one.git
