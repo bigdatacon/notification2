@@ -92,5 +92,5 @@ class EnrichedMessage(BaseModel):
     """EnrichedMessage."""
 
     template: str
-    user_data: Dict[uuid.UUID, dict[str, str]]
+    user_data: Dict[uuid.UUID, Dict[str, str]]
     shipping_methods: List[str]

@@ -1,6 +1,6 @@
 
 from typing import Optional
-from fastapi import FastAPI
+from fastapi import FastAPI , APIRouter, Depends
 
 from pydantic import BaseModel
 from services.authmy import AuthServiceMy
@@ -13,6 +13,7 @@ class Package(BaseModel):
     name: str
     number: str
     description: Optional[str] = None
+
 
 app = FastAPI()
 
@@ -32,10 +33,20 @@ async def return_user_info_by_id(db_name):
     user_info = AuthServiceMy(connection).get_all_users_info_from_table()
     return {'user_info' : user_info}
 
-@app.get('/test_async')
-async def test_async():
-    return AuthServicetesting.get_by_id()
 
+router = APIRouter()
+@router.get('/')
+async def get_hw(
+        apitest_service: AuthServicetesting = Depends(get_auth_servicetesting),
+):
+    dashboards = await apitest_service.get_by_id()
+    return dashboards
+
+# async def test_async():
+#     return AuthServicetesting.get_by_id()
+
+
+app.include_router(router, prefix='/test_async')
 
 # @app.get('/get_all_users_info_from_table_async')
 # async def return_user_info_by_id_async(db_name, user_id):
