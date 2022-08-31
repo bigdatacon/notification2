@@ -42,6 +42,10 @@ async def get_hw(
     dashboards = await apitest_service.get_by_id()
     return dashboards
 
+# @router.get('/')
+# async def get_hw():
+#     return await  AuthServicetesting.get_by_id()
+
 # async def test_async():
 #     return AuthServicetesting.get_by_id()
 
